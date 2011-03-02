@@ -1,0 +1,5 @@
+name: Bandages
+main: com.bekvon.bukkit.bandages.Bandages
+version: 1.0
+description: Bandage plugin for Bukkit.
+author: bekvon
