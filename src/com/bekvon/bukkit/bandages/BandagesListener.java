@@ -91,7 +91,7 @@ public class BandagesListener extends PlayerListener {
 
     @Override
     public void onPlayerMove(PlayerMoveEvent event) {
-        if(run)
+        if(run && parent.forceStandStill)
         {
             if(!parent.getConfiguration().getBoolean("allowMove", false))
             {

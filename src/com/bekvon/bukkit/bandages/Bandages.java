@@ -22,6 +22,8 @@ public class Bandages extends JavaPlugin {
 
     private final BandagesListener listener = new BandagesListener(this);;
     public PermissionHandler authority;
+    public boolean forceStandStill=true;
+    private boolean firstRun = true;
 
     public void onDisable() {
         listener.stopListening();
@@ -30,11 +32,16 @@ public class Bandages extends JavaPlugin {
 
     public void onEnable() {
         this.getConfiguration().load();
+        forceStandStill = this.getConfiguration().getBoolean("requireStandStill", true);
         listener.startListening();
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM, listener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, listener, Priority.Normal, this);
+        if(firstRun)
+        {
+            firstRun = false;
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM, listener, Priority.Normal, this);
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, listener, Priority.Normal, this);
+            checkPermissions();
+        }
         Logger.getLogger("Minecraft").log(Level.INFO,"[Bandages] Enabled! Version:" + this.getDescription().getVersion() + " by bekvon");
-        checkPermissions();
     }
 
     private void checkPermissions() {
@@ -47,5 +54,4 @@ public class Bandages extends JavaPlugin {
             Logger.getLogger("Minecraft").log(Level.INFO, "[Bandages] Permissions Plugin NOT Found!");
         }
     }
-
 }
