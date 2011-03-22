@@ -9,6 +9,7 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
@@ -20,28 +21,38 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Bandages extends JavaPlugin {
 
-    private final BandagesListener listener = new BandagesListener(this);;
-    public PermissionHandler authority;
-    public boolean forceStandStill=true;
+    private static PermissionHandler authority;
     private boolean firstRun = true;
+    private static BandageManager bmanager;
+    private static BandagePlayerListener plistener;
+    private static BandageEntityListener elistener;
 
     public void onDisable() {
-        listener.stopListening();
+        bmanager.killThread();
         Logger.getLogger("Minecraft").log(Level.INFO,"[Bandages] Disabled!");
     }
 
     public void onEnable() {
         this.getConfiguration().load();
-        forceStandStill = this.getConfiguration().getBoolean("requireStandStill", true);
-        listener.startListening();
         if(firstRun)
         {
-            firstRun = false;
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM, listener, Priority.Normal, this);
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, listener, Priority.Normal, this);
+            bmanager = new BandageManager();
+            plistener = new BandagePlayerListener();
+            elistener = new BandageEntityListener();
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM, plistener, Priority.Normal, this);
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Normal, this);
+            getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGED, elistener, Priority.Lowest, this);
             checkPermissions();
+            firstRun = false;
         }
+        bmanager.loadConfig(this.getConfiguration());
+        bmanager.startThread();
         Logger.getLogger("Minecraft").log(Level.INFO,"[Bandages] Enabled! Version:" + this.getDescription().getVersion() + " by bekvon");
+    }
+
+    public static BandageManager getManager()
+    {
+        return bmanager;
     }
 
     private void checkPermissions() {
@@ -53,5 +64,13 @@ public class Bandages extends JavaPlugin {
             authority = null;
             Logger.getLogger("Minecraft").log(Level.INFO, "[Bandages] Permissions Plugin NOT Found!");
         }
+    }
+
+    public static boolean hasAuthority(Player player, String permission, boolean def)
+    {
+        if(authority == null)
+            return def;
+        else
+            return authority.has(player, permission);
     }
 }
