@@ -84,80 +84,71 @@ public class BandageManager {
 
     public void playerBandagePlayerEvent(Player sender, Player reciever)
     {
-        if(!Bandages.hasAuthority(sender, "bandages.use", true))
-        {
-            sender.sendMessage("§cYou cant use bandages.");
-            return;
-        }
-        if(reciever.getHealth()>= maxhealth)
-        {
-            sender.sendMessage("§cTarget is already at full heatlh!");
-            return;
-        }
         ItemStack item = sender.getItemInHand();
-        if(item.getTypeId() != itemId || !(item.getAmount() >= amountRequired))
-        {
-            sender.sendMessage("§cYou are not holding enough bandages in your hand.");
-            return;
-        }
-        synchronized(sync)
-        {
-            if(playerMap.containsKey(sender))
-            {
-                sender.sendMessage("§cYou are already bandaging somone.");
-                return;
-            }
-            if(recieverPlayerMap.containsKey(reciever))
-            {
-                sender.sendMessage("§cSomone else is already bandaging that player.");
-                return;
-            }
-            timeStamp.put(sender, System.currentTimeMillis());
-            playerMap.put(sender, reciever);
-            recieverPlayerMap.put(reciever, sender);
-        }
-        sender.sendMessage("§eYou begin applying bandages to §f" + reciever.getName());
-        reciever.sendMessage(sender.getName() + "§e has begun bandaging you.");
-    }
-
-    public void playerBandageEvent(Player player)
-    {
-        if(!Bandages.hasAuthority(player, "bandages.use", true))
-        {
-            player.sendMessage("§cYou cant use bandages.");
-            return;
-        }
-        if(player.getHealth()>=maxhealth)
-        {
-            player.sendMessage("§cYou are already at full health!");
-            return;
-        }
-        ItemStack item = player.getItemInHand();
         if(item.getTypeId() == itemId)
         {
-            if(item.getAmount() >= amountRequired)
+            if(!Bandages.hasAuthority(sender, "bandages.use", true))
             {
-                synchronized(sync)
+                sender.sendMessage("§cYou cant use bandages.");
+                return;
+            }
+            if(reciever.getHealth()>= maxhealth)
+            {
+                sender.sendMessage("§cTarget is already at full heatlh!");
+                return;
+            }
+
+            if(!(item.getAmount() >= amountRequired))
+            {
+                sender.sendMessage("§cYou are not holding enough bandages in your hand.");
+                return;
+            }
+            synchronized(sync)
+            {
+                if(playerMap.containsKey(sender))
                 {
-                    if(playerMap.containsKey(player))
-                    {
+                    sender.sendMessage("§cYou are already bandaging somone.");
+                    return;
+                }
+                if(recieverPlayerMap.containsKey(reciever))
+                {
+                    sender.sendMessage("§cSomone else is already bandaging that player.");
+                    return;
+                }
+                timeStamp.put(sender, System.currentTimeMillis());
+                playerMap.put(sender, reciever);
+                recieverPlayerMap.put(reciever, sender);
+            }
+            sender.sendMessage("§eYou begin applying bandages to §f" + reciever.getName());
+            reciever.sendMessage(sender.getName() + "§e has begun bandaging you.");
+        }
+    }
+
+    public void playerBandageEvent(Player player) {
+        ItemStack item = player.getItemInHand();
+        if (item.getTypeId() == itemId) {
+            if (!Bandages.hasAuthority(player, "bandages.use", true)) {
+                player.sendMessage("§cYou cant use bandages.");
+                return;
+            }
+            if (player.getHealth() >= maxhealth) {
+                player.sendMessage("§cYou are already at full health!");
+                return;
+            }
+            if (item.getAmount() >= amountRequired) {
+                synchronized (sync) {
+                    if (playerMap.containsKey(player)) {
                         player.sendMessage("§cYou are already applying bandages!");
-                    }
-                    else if(recieverPlayerMap.containsKey(player))
-                    {
+                    } else if (recieverPlayerMap.containsKey(player)) {
                         player.sendMessage("§cCan't bandage while somone is applying bandages to you!");
-                    }
-                    else
-                    {
+                    } else {
                         player.sendMessage("§aYou begin applying bandages...");
                         timeStamp.put(player, System.currentTimeMillis());
                         playerMap.put(player, player);
                         recieverPlayerMap.put(player, player);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 player.sendMessage("§cYou are not holding enough bandages in your hand.");
             }
         }
