@@ -173,9 +173,13 @@ public class BandageManager {
                                     {
                                         ItemStack item = sender.getInventory().getItemInHand();
                                         if (item.getTypeId() == itemId && item.getAmount() >= amountRequired) {
-                                            item.setAmount(item.getAmount() - amountRequired);
-                                            if (item.getAmount() <= 0) {
-                                                sender.getInventory().remove(item);
+                                            if(item.getAmount() == amountRequired)
+                                            {
+                                                 sender.getInventory().remove(item);
+                                            }
+                                            else
+                                            {
+                                                item.setAmount(item.getAmount() - amountRequired);
                                             }
                                             if(reciever.getHealth()+healamount > maxhealth)
                                                 reciever.setHealth(maxhealth);
