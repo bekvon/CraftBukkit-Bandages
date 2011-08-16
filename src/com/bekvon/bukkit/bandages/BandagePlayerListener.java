@@ -5,15 +5,9 @@
 
 package com.bekvon.bukkit.bandages;
 
-import java.util.Map;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
 
 /**
  *
@@ -29,11 +23,9 @@ public class BandagePlayerListener extends PlayerListener {
     }
 
     @Override
-    public void onPlayerItem(PlayerItemEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
+
         Bandages.getManager().playerBandageEvent(event.getPlayer());
-        super.onPlayerItem(event);
+        super.onPlayerInteract(event);
     }
-
-
-
 }

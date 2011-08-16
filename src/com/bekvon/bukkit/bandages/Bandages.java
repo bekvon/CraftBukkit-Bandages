@@ -39,9 +39,9 @@ public class Bandages extends JavaPlugin {
             bmanager = new BandageManager();
             plistener = new BandagePlayerListener();
             elistener = new BandageEntityListener();
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM, plistener, Priority.Normal, this);
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, plistener, Priority.Normal, this);
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, plistener, Priority.Normal, this);
-            getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGED, elistener, Priority.Lowest, this);
+            getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, elistener, Priority.Lowest, this);
             checkPermissions();
             firstRun = false;
         }
@@ -68,6 +68,8 @@ public class Bandages extends JavaPlugin {
 
     public static boolean hasAuthority(Player player, String permission, boolean def)
     {
+        if(player.hasPermission(permission))
+            return true;
         if(authority == null)
             return def;
         else
