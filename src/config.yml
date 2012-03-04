@@ -1,0 +1,18 @@
+#the Item ID of bandages, default is 339 which is Paper
+itemId: 339
+
+#the number of hearts bandages will heal, the default is 5 which is 2.5 hearts
+healAmount: 5
+
+#the number of bandage items it takes for one heal
+amountRequired: 1
+
+#the delay in seconds between applying bandages and finished applying bandages, default is 4 seconds
+#NOTE: this may vary by up to a second due to lag and other reasons
+bandageDelay: 4
+
+#maximum health a player can have, leave this alone unless you want players to be able to heal higher then their helath bar
+maxHealth: 20
+
+#determines weather or not players must stand still to use the bandages
+requireStandStill: true

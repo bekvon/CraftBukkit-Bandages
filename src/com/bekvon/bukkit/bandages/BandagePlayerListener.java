@@ -5,27 +5,24 @@
 
 package com.bekvon.bukkit.bandages;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
  *
  * @author Administrator
  */
-public class BandagePlayerListener extends PlayerListener {
+public class BandagePlayerListener implements Listener {
 
-
-    @Override
+    @EventHandler()
     public void onPlayerMove(PlayerMoveEvent event) {
         Bandages.getManager().playerMovement(event.getPlayer());
-        super.onPlayerMove(event);
     }
 
-    @Override
+    @EventHandler()
     public void onPlayerInteract(PlayerInteractEvent event) {
-
         Bandages.getManager().playerBandageEvent(event.getPlayer());
-        super.onPlayerInteract(event);
     }
 }

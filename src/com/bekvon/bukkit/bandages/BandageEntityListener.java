@@ -7,17 +7,19 @@ package com.bekvon.bukkit.bandages;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
+
 
 /**
  *
  * @author Administrator
  */
-public class BandageEntityListener extends EntityListener {
+public class BandageEntityListener implements Listener {
 
-    @Override
+    @EventHandler()
     public void onEntityDamage(EntityDamageEvent event) {
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
@@ -34,6 +36,5 @@ public class BandageEntityListener extends EntityListener {
                 }
             }
         }
-        super.onEntityDamage(event);
     }
 }

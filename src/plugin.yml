@@ -1,5 +1,8 @@
 name: Bandages
 main: com.bekvon.bukkit.bandages.Bandages
-version: 1.2.4
+version: 1.2.5
 description: Bandages plugin for Bukkit.
 author: bekvon
+permissions:
+  bandages.use:
+    description: Allows player to use bandages
