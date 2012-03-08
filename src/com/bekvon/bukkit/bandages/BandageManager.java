@@ -12,9 +12,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
+
 
 
 /**
@@ -26,7 +27,6 @@ public class BandageManager {
     private Map<Player, Player> playerMap;
     private Map<Player, Player> recieverPlayerMap;
     private Map<Player, Long> timeStamp;
-    private Thread runThread;
     private int itemId;
     private int amountRequired;
     private int healamount;
@@ -74,6 +74,7 @@ public class BandageManager {
     
     public void loadConfig(Configuration config)
     {
+        config.options().copyDefaults(true);
         itemId=config.getInt("itemId", Material.PAPER.getId());
         timedelay = config.getInt("bandageDelay", 4) * 1000;
         maxhealth = config.getInt("maxHealth", 20);
@@ -156,7 +157,7 @@ public class BandageManager {
 
     public void startThread() {
         enabled = true;
-        runThread = new Thread(new Runnable() {
+        Thread runThread = new Thread(new Runnable() {
             public void run() {
                 while (enabled) {
                     try {
@@ -169,19 +170,15 @@ public class BandageManager {
                                     Player reciever = playerMap.remove(next.getKey());
                                     Player sender = recieverPlayerMap.remove(reciever);
                                     it.remove();
-                                    if(sender != null && reciever!=null && sender.isOnline() && reciever.isOnline())
-                                    {
+                                    if (sender != null && reciever != null && sender.isOnline() && reciever.isOnline()) {
                                         ItemStack item = sender.getInventory().getItemInHand();
                                         if (item.getTypeId() == itemId && item.getAmount() >= amountRequired) {
-                                            if(item.getAmount() == amountRequired)
-                                            {
-                                                 sender.getInventory().remove(item);
-                                            }
-                                            else
-                                            {
+                                            if (item.getAmount() == amountRequired) {
+                                                sender.getInventory().remove(item);
+                                            } else {
                                                 item.setAmount(item.getAmount() - amountRequired);
                                             }
-                                            if(reciever.getHealth()+healamount > maxhealth)
+                                            if (reciever.getHealth() + healamount > maxhealth)
                                                 reciever.setHealth(maxhealth);
                                             else
                                                 reciever.setHealth(healamount + reciever.getHealth());
@@ -193,7 +190,7 @@ public class BandageManager {
                                             }
                                         } else {
                                             sender.sendMessage("§cNot enough bandages in your hands!");
-                                            if(!reciever.equals(sender))
+                                            if (!reciever.equals(sender))
                                                 reciever.sendMessage(sender.getName() + "§c has stopped applying bandages to you.");
                                         }
                                     }
@@ -201,7 +198,7 @@ public class BandageManager {
                             }
                         }
                         Thread.sleep(1000);
-                    } catch (Exception ex) {
+                    } catch (Exception ignored) {
                     }
                 }
             }
